@@ -18,8 +18,10 @@ from tmf_reader import TMFReader
 
 
 class MainWindow(QtWidgets.QMainWindow):
-    def __init__(self, num_zones, serial_port=None, depth_img_only=False, verbose=False):
+    def __init__(self, pool, serial_port=None, depth_img_only=False, verbose=False):
         super().__init__()
+
+        self.pool = pool
 
         if serial_port is None:
             if platform == "darwin":  # macOS
@@ -51,7 +53,11 @@ class MainWindow(QtWidgets.QMainWindow):
             self.serial_port = serial_port
             print("Using provided serial port:", self.serial_port)
 
-        self.num_zones = 9
+        if self.pool:
+            self.num_zones = 1
+        else:
+            self.num_zones = 9
+
         self.depth_img_only = depth_img_only
         self.verbose = verbose
 
@@ -68,29 +74,33 @@ class MainWindow(QtWidgets.QMainWindow):
         for i in range(self.num_zones):
             plot_widget = pg.PlotWidget()
             plot_widget.setBackground("k")
+            # Set title style to white color for better visibility on black background
+            plot_widget.setTitle(title=f"Zone {i+1} (idx={i})", color="w", size="12pt")
             self.plot_widgets.append(plot_widget)
             self.lines.append(plot_widget.plot([], [], pen=pen))
             row = i // grid_size
             col = i % grid_size
             self.grid_layout.addWidget(plot_widget, row, col)
 
-        # Add the image plot to the right of the 4x4 grid
-        self.image_plot_widget = pg.PlotWidget()
-        self.image_plot_widget.setBackground("k")
-        self.image_item = pg.ImageItem()
-        self.image_plot_widget.addItem(self.image_item)
-        self.grid_layout.addWidget(
-            self.image_plot_widget,  # widget to add
-            1,  # row (0-indexed)
-            grid_size,  # column (0-indexed)
-            2,  # row span
-            2,  # column span
-        )
+        if not self.pool:
+            # Add the image plot to the right of the 4x4 grid
+            self.image_plot_widget = pg.PlotWidget()
+            self.image_plot_widget.setBackground("k")
+            self.image_item = pg.ImageItem()
+            self.image_plot_widget.addItem(self.image_item)
+            self.grid_layout.addWidget(
+                self.image_plot_widget,  # widget to add
+                0,  # row (0-indexed)
+                grid_size,  # column (0-indexed)
+                2,  # row span
+                2,  # column span
+            )
 
-        # Set column stretch factors
-        for col in range(grid_size):
-            self.grid_layout.setColumnStretch(col, 1)
-        self.grid_layout.setColumnStretch(grid_size, 3)  # Make the image column wider
+        if not self.pool:
+            # Set column stretch factors
+            for col in range(grid_size):
+                self.grid_layout.setColumnStretch(col, 1)
+            self.grid_layout.setColumnStretch(grid_size, 3)  # Make the image column wider
 
         self.timer = QtCore.QTimer()
         self.timer.setInterval(1)  # Update interval in milliseconds
@@ -109,6 +119,12 @@ class MainWindow(QtWidgets.QMainWindow):
     def update_plot(self):
         hists, dists = self.tmf_reader.get_measurement(reset_buffer=False)
 
+        # the first zone is the reference histogram, so remove it
+        hists = np.array(hists[0][1:])
+
+        if self.pool:
+            hists = np.sum(hists, axis=0)[None, :]
+
         dists_array = dists[0]["depths_1"]
                     
         print(f"FPS: {self.frame_idx / (time.time() - self.start_time)}")
@@ -117,19 +133,20 @@ class MainWindow(QtWidgets.QMainWindow):
         if not self.depth_img_only:
             # update line plot data
             for zone in range(self.num_zones):
-                self.lines[zone].setData(hists[0][zone])
+                self.lines[zone].setData(hists[zone])
 
-        # update image plot data
-        self.image_item.setImage(
-            np.array(dists_array).reshape(
-            int(np.sqrt(self.num_zones)), 
-            int(np.sqrt(self.num_zones))
+        if not self.pool:
+            # update image plot data
+            self.image_item.setImage(
+                np.array(dists_array).reshape(
+                int(np.sqrt(self.num_zones)), 
+                int(np.sqrt(self.num_zones))
+                )
             )
-        )
 
 
 def signal_handler(sig, frame):
-    print("\nCaught Ctrl+C, exiting gracefully...")
+    print("\nCaught Ctrl+C, exiting...")
     QtWidgets.QApplication.quit()
     sys.exit(0)
 
@@ -150,6 +167,11 @@ if __name__ == "__main__":
         action="store_true",
         help="Only show the depth image plot, not the individual zone plots (avoids dropped frames)",
     )
+    parser.add_argument(
+        "--pool",
+        action="store_true",
+        help="Pool data from each zone into a single plot"
+    )
     args = parser.parse_args()
 
     # Set up the Ctrl+C handler
@@ -157,7 +179,7 @@ if __name__ == "__main__":
 
     app = QtWidgets.QApplication([])
     window = MainWindow(
-        args.port, depth_img_only=args.depth_img_only, verbose=args.verbose
+        serial_port=args.port, pool=args.pool, depth_img_only=args.depth_img_only, verbose=args.verbose
     )
     window.show()
     
