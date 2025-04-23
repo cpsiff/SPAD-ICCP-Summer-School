@@ -11,7 +11,7 @@ import json
 SPEED_OF_LIGHT = 299792458  # in meters per second
 BIN_SIZE = 9.1e-11  # in seconds
 # The TMF sensor seems to start looking for photons a bit before the laser pulse is fired.
-# This offset accounts for the delay.
+# This offset is the time it takes for the laser to fire after the sensor starts looking for photons.
 TOF_OFFSET = 1.1e-9  # in seconds
 
 

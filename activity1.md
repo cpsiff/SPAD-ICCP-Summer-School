@@ -5,12 +5,14 @@ Using the TMF8820 and the supplied objects, try to recreate histograms with the 
 Capture a histogram with a single peak.
 
 Example:
+
 ![One Peak](media/activity1/1_peak.png)
 
 ## 2. Three peaks
 Capture a histogram with three distinct peaks.
 
 Example:
+
 ![Three peaks](media/activity1/2_three_peaks.png)
 
 ## 3. Small peak, Big peak
@@ -19,16 +21,19 @@ Capture a histogram with a small peak followed by a large peak. The small peak s
 Hint: the more reflective the object, the higher its corresponding peak will be.
 
 Example:
+
 ![Small Peak Big Peak](media/activity1/3_small_big.png)
 
 ## 4. Three same-height peaks
 Capture a histogram with three distinct peaks, each of which are a similar height.
 
 Example:
+
 ![Three same height peaks](media/activity1/4_three_same_peaks.png)
 
 ## 5. Gradual Slope
 Capture a histogram with a uniform slope downwards across the entire range.
 
 Example:
+
 ![Gradual Slope](media/activity1/5_slope.png)
