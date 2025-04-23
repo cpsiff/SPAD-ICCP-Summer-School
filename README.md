@@ -26,7 +26,7 @@ The `live_vis.py` and `capture.py` scripts can be used to visualize and to recor
 ```bash
 conda create -n SPAD-ICCP-Summer-School python=3.12.10
 conda activate SPAD-ICCP-Summer-School
-conda install numpy pyqtgraph pyserial
+conda install numpy pyqtgraph pyserial matplotlib
 pip install pyqt6
 ```
 

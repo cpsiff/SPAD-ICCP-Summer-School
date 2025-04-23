@@ -15,13 +15,15 @@ import serial
 from PyQt6 import QtCore, QtWidgets
 
 from tmf_reader import TMFReader
+from activity2 import estimate_distance as estimate_distance_fn
 
 
 class MainWindow(QtWidgets.QMainWindow):
-    def __init__(self, pool, serial_port=None, depth_img_only=False, verbose=False):
+    def __init__(self, pool, serial_port=None, depth_img_only=False, verbose=False, estimate_distance=False):
         super().__init__()
 
         self.pool = pool
+        self.estimate_distance = estimate_distance
 
         if serial_port is None:
             if platform == "darwin":  # macOS
@@ -53,7 +55,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.serial_port = serial_port
             print("Using provided serial port:", self.serial_port)
 
-        if self.pool:
+        if self.pool or self.estimate_distance:
             self.num_zones = 1
         else:
             self.num_zones = 9
@@ -75,7 +77,7 @@ class MainWindow(QtWidgets.QMainWindow):
             plot_widget = pg.PlotWidget()
             plot_widget.setBackground("k")
             # Set title style to white color for better visibility on black background
-            if not self.pool:
+            if not self.pool and not self.estimate_distance:
                 plot_widget.setTitle(title=f"Zone {i+1} (idx={i})", color="w", size="12pt")
             else:
                 plot_widget.setTitle(title=f"Pooled", color="w", size="12pt")
@@ -85,7 +87,7 @@ class MainWindow(QtWidgets.QMainWindow):
             col = i % grid_size
             self.grid_layout.addWidget(plot_widget, row, col)
 
-        if not self.pool:
+        if not self.pool and not self.estimate_distance:
             # Add the image plot to the right of the 4x4 grid
             self.image_plot_widget = pg.PlotWidget()
             self.image_plot_widget.setBackground("k")
@@ -99,7 +101,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 2,  # column span
             )
 
-        if not self.pool:
+        if not self.pool and not self.estimate_distance:
             # Set column stretch factors
             for col in range(grid_size):
                 self.grid_layout.setColumnStretch(col, 1)
@@ -130,8 +132,13 @@ class MainWindow(QtWidgets.QMainWindow):
 
         dists_array = dists[0]["depths_1"]
                     
-        print(f"FPS: {self.frame_idx / (time.time() - self.start_time)}")
+        # print(f"FPS: {self.frame_idx / (time.time() - self.start_time)}")
         self.frame_idx += 1
+
+        if self.estimate_distance:
+            self.lines[0].setData(hists[4])
+            self.plot_widgets[0].setTitle(title=f"Center Zone Histogram | Onboard Distance: {dists_array[4]}mm | Your Algorithm: {estimate_distance_fn(hists[4]):.0f}mm")
+            return
 
         if not self.depth_img_only:
             # update line plot data
@@ -139,7 +146,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.lines[zone].setData(hists[zone])
                 self.plot_widgets[zone].setYRange(0, hists[zone].max())
 
-        if not self.pool:
+        if not self.pool and not self.estimate_distance:
             # update image plot data
             self.image_item.setImage(
                 np.array(dists_array).reshape(
@@ -176,6 +183,11 @@ if __name__ == "__main__":
         action="store_true",
         help="Pool data from each zone into a single plot"
     )
+    parser.add_argument(
+        "--estimate_distance",
+        action="store_true",
+        help="Estimate distance from the histogram using your algorithm (implemented in activity2.py)"
+    )
     args = parser.parse_args()
 
     # Set up the Ctrl+C handler
@@ -183,7 +195,7 @@ if __name__ == "__main__":
 
     app = QtWidgets.QApplication([])
     window = MainWindow(
-        serial_port=args.port, pool=args.pool, depth_img_only=args.depth_img_only, verbose=args.verbose
+        serial_port=args.port, pool=args.pool, depth_img_only=args.depth_img_only, verbose=args.verbose, estimate_distance=args.estimate_distance
     )
     window.show()
     
