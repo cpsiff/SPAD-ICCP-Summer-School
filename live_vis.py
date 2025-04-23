@@ -75,7 +75,10 @@ class MainWindow(QtWidgets.QMainWindow):
             plot_widget = pg.PlotWidget()
             plot_widget.setBackground("k")
             # Set title style to white color for better visibility on black background
-            plot_widget.setTitle(title=f"Zone {i+1} (idx={i})", color="w", size="12pt")
+            if not self.pool:
+                plot_widget.setTitle(title=f"Zone {i+1} (idx={i})", color="w", size="12pt")
+            else:
+                plot_widget.setTitle(title=f"Pooled", color="w", size="12pt")
             self.plot_widgets.append(plot_widget)
             self.lines.append(plot_widget.plot([], [], pen=pen))
             row = i // grid_size
@@ -134,6 +137,7 @@ class MainWindow(QtWidgets.QMainWindow):
             # update line plot data
             for zone in range(self.num_zones):
                 self.lines[zone].setData(hists[zone])
+                self.plot_widgets[zone].setYRange(0, hists[zone].max())
 
         if not self.pool:
             # update image plot data
