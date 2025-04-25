@@ -23,7 +23,7 @@ def estimate_distance(hist: np.ndarray) -> float:
         hist: (128,) numpy array of histogram counts
 
     Returns:
-        distance: float, estimated distance to the nearest object in mm
+        distance: float, estimated distance to the nearest object in meters
     """
     return 0.0 # TODO: Implement your algorithm here
 
@@ -32,7 +32,7 @@ def eval_dist_on_dataset():
     with open("data/distance_data.json", "r") as f:
         data = json.load(f)
 
-    true_dists = [datapoint["dist_to_plane"] * 1000 for datapoint in data]
+    true_dists = [datapoint["dist_to_plane"] for datapoint in data]
     onboard_dists = [datapoint["distances"][0]["depths_1"][4] for datapoint in data]
     est_dists = [estimate_distance(datapoint["hists"][4]) for datapoint in data]
 
@@ -40,8 +40,8 @@ def eval_dist_on_dataset():
     plt.scatter(true_dists, est_dists, label="Estimated Distance")
     max_dist = max(true_dists)
     plt.plot([0, max_dist], [0, max_dist], "k--", label="Ideal (slope=1)")
-    plt.xlabel("True Distance (mm)")
-    plt.ylabel("Your Algorithm (mm)")
+    plt.xlabel("True Distance (m)")
+    plt.ylabel("Your Algorithm (m)")
     plt.legend()
     plt.show()
 

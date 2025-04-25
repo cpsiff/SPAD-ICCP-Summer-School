@@ -15,9 +15,9 @@ def estimate_distance(hist: np.ndarray) -> float:
         hist: (128,) numpy array of histogram counts
 
     Returns:
-        distance: float, estimated distance to the nearest object in mm
+        distance: float, estimated distance to the nearest object in meters
     """
     peak_idx = np.argmax(hist)
     time_of_flight = peak_idx * BIN_SIZE - TOF_OFFSET
     distance = SPEED_OF_LIGHT * time_of_flight / 2
-    return distance * 1000  # convert m to mm
+    return distance
