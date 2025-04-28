@@ -1,9 +1,9 @@
 # Activity 1: Recreate Transient Histograms
-Using the TMF8820 and the supplied objects, try to recreate histograms with the following characteristics. The provided images are just examples - just try to match the key features described in the text. An exact match is not necessary. Remember that we're running in pooled mode, with one big pixel, so the sensor field-of-view is somewhat wide (~33 degrees, 60mm full frame equivalent).
+Using the TMF8820 and the supplied objects, try to recreate histograms with the following characteristics. The provided images are just examples - just try to match the key features described in the text. An exact match is not necessary. It's recommended that you try to match pooled histograms, rather than one individual zone, as the wider FoV makes it easier. In the pooled histogram, the FoV is ~33 degrees, (60mm full frame equivalent).
 
-For this activity, it is recommended to pool the histograms together (sum each bin's values between each zone). This will give one histogram with a wide field-of-view, which is easier to work with. To view the pooled histogram, run:
+Run the visualization script to get started viewing histograms. The script doesn't have a capture function, but you can take a screenshot if you would like to save your histograms.
 ```bash
-python live_vis.py --pool
+python live_vis.py
 ```
 
 ## 1. One peak

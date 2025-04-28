@@ -1,7 +1,7 @@
 """
 Estimate distance to nearest object in a transient histogram.
 
-See activity2.md for details.
+See activity3.md for details.
 """
 
 import numpy as np
@@ -25,10 +25,14 @@ def estimate_distance(hist: np.ndarray) -> float:
     Returns:
         distance: float, estimated distance to the nearest object in meters
     """
-    return 0.0 # TODO: Implement your algorithm here
+    return 0.0 # TODO: Implement your algorithm here. Feel free to use external libraries.
 
 
 def eval_dist_on_dataset():
+    """
+    Evaluate the distance estimation algorithm on a reference dataset.
+    You do not need to modify this function to complete the activities.
+    """
     with open("data/distance_data.json", "r") as f:
         data = json.load(f)
 

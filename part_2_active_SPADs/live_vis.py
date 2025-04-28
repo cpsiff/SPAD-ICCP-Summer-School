@@ -15,7 +15,7 @@ import serial
 from PyQt6 import QtCore, QtWidgets
 
 from tmf_reader import TMFReader
-from activity2 import estimate_distance as estimate_distance_fn
+from part_2_active_SPADs.activity3 import estimate_distance as estimate_distance_fn
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -75,7 +75,7 @@ class MainWindow(QtWidgets.QMainWindow):
             plot_widget = pg.PlotWidget()
             plot_widget.setBackground("k")
             # Set title style to white color for better visibility on black background
-            plot_widget.setTitle(title=f"Zone {i+1} (idx={i})", color="w", size="12pt")
+            plot_widget.setTitle(title=f"Zone {i+1}", color="w", size="12pt")
             # Add x-axis label with enhanced visibility
             plot_widget.setLabel("bottom", "Bin Index", color="w", size="12pt")
             plot_widget.showAxis("bottom", True)
@@ -93,7 +93,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.pooled_plot_widget.setLabel("bottom", "Bin Index", color="w", size="12pt")
         self.pooled_plot_widget.showAxis("bottom", True)
         self.pooled_plot_widget.getAxis("bottom").setTextPen("w")
-        self.pooled_plot_widget.setTitle(title=f"Pooled", color="w", size="12pt")
+        self.pooled_plot_widget.setTitle(title=f"Pooled (sum of all zones per-bin)", color="w", size="12pt")
         self.grid_layout.addWidget(
             self.pooled_plot_widget,  # widget to add
             0,  # row (0-indexed)
@@ -172,7 +172,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--estimate_distance",
         action="store_true",
-        help="Estimate distance from the histogram using your algorithm (implemented in activity2.py)",
+        help="Estimate distance from the histogram using your algorithm (implemented in activity3.py)",
     )
     args = parser.parse_args()
 
