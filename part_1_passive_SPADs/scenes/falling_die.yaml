@@ -1,0 +1,10 @@
+file: data/sequences/anycam/falling_dice_9th_Dec_2022/take_7/binary.npy
+hot_pixel: data/hot_pixel_mask/colorSPAD_continuous_stream.npy
+
+# photon cube duration
+initial_time_step: 58_368
+num_time_step: 2000
+
+rotate_180: True
+colorSPAD_col_correct: True
+colorSPAD_RGBW_CFA: data/color_filter_array/rgbw_oh_bn_color_ss2_padded.tif
