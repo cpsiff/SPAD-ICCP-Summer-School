@@ -115,7 +115,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.start_time = time.time()
         self.frame_idx = 0
 
-        self.tmf_reader = TMFReader(self.serial_port)
+        try:
+            self.tmf_reader = TMFReader(self.serial_port)
+        except Exception as e:
+            print(f"Error initializing - is the port ({self.serial_port}) correct?")
+            print("Tip: pass in the port manually with the -p flag. e.g.: python live_vis.py -p /dev/ttyACM0")
+            exit()
 
         self.started = False
         self.second_cycle = False
