@@ -24,8 +24,8 @@ The `live_vis.py` script can be used to visualize data from the sensor. In order
 
 2. Set up the environment
 ```bash
-conda create -n SPAD-ICCP-Summer-School python=3.12.10
-conda activate SPAD-ICCP-Summer-School
+conda create -n ICCP python=3.12
+conda activate ICCP
 conda install numpy pyqtgraph pyserial matplotlib
 pip install pyqt6
 ```

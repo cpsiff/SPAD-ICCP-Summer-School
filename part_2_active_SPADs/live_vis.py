@@ -15,7 +15,7 @@ import serial
 from PyQt6 import QtCore, QtWidgets
 
 from tmf_reader import TMFReader
-from part_2_active_SPADs.activity3 import estimate_distance as estimate_distance_fn
+from activity3 import estimate_distance as estimate_distance_fn
 
 
 class MainWindow(QtWidgets.QMainWindow):
