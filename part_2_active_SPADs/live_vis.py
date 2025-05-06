@@ -166,7 +166,6 @@ if __name__ == "__main__":
         "--port",
         "-p",
         type=str,
-        default="/dev/ttyACM0",
         help="Serial port of MCU with VL sensor",
     )
     parser.add_argument(
