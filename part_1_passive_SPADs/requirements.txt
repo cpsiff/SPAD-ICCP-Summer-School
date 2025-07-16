@@ -1,11 +1,10 @@
 black
 einops
-loguru
+jupyter-black
 matplotlib
-natsort
+mediapy
+notebook
 numpy
-opencv-python
 pyyaml
-scikit-image
-scipy
-taichi
+torchvision
+torch
