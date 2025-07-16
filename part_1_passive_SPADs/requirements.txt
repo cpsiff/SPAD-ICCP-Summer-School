@@ -1,10 +1,9 @@
-black
 einops
-jupyter-black
 matplotlib
 mediapy
-notebook
+jupyter
 numpy
 pyyaml
 torchvision
 torch
+OpenEXR
