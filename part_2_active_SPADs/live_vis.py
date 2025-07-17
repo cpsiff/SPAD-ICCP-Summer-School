@@ -31,7 +31,7 @@ class MainWindow(QtWidgets.QMainWindow):
                     # Try to auto-select a port with likely USB/Serial in description
                     for port in ports:
                         # print(port.device)
-                        if "USB" in port.description or "Serial" in port.description:
+                        if "SparkFun" in port.description:
                             self.serial_port = port.device
                             break
                 else:
