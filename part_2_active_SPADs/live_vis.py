@@ -24,38 +24,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.estimate_distance = estimate_distance
 
-        if serial_port is None:
-            if platform == "darwin":  # macOS
-                ports = list(serial.tools.list_ports.comports())
-                if ports:
-                    for port in ports:
-                        if "SparkFun" in port.description:
-                            self.serial_port = port.device
-                            break
-                    self.serial_port = ports[0].device
-                    print("Warning: No SparkFun port found. Check connection. Using first port:", self.serial_port)
-            elif platform == "win32":  # Windows
-                ports = list(serial.tools.list_ports.comports())
-                if ports:
-                    for port in ports:
-                        if "USB Serial Device" in port.description or "SparkFun" in port.description:
-                            self.serial_port = port.device
-                            break
-                    self.serial_port = ports[0].device
-                    print("Warning: No SparkFun port found. Check connection. Using first port:", self.serial_port)
-            else: # linux
-                ports = list(serial.tools.list_ports.comports())
-                if ports:
-                    for port in ports:
-                        if "SparkFun" in port.description:
-                            self.serial_port = port.device
-                            break
-                    self.serial_port = ports[0].device
-                    print("Warning: No SparkFun port found. Check connection. Using first port:", self.serial_port)
-            print("Using auto-selected serial port:", self.serial_port)
-        else:
-            print("Using provided serial port:", self.serial_port)
-
+        self.serial_port = serial_port
+        self.auto_select_serial_port()
 
         self.num_zones = 9
 
@@ -155,6 +125,40 @@ class MainWindow(QtWidgets.QMainWindow):
             self.lines[zone].setData(hists[zone])
             self.plot_widgets[zone].setYRange(0, hists[zone].max())
 
+    def auto_select_serial_port(self):
+        if self.serial_port is None:
+            if platform == "darwin":  # macOS
+                ports = list(serial.tools.list_ports.comports())
+                if ports:
+                    for port in ports:
+                        if "SparkFun" in port.description:
+                            self.serial_port = port.device
+                            print("Using auto-selected serial port:", self.serial_port)
+                            return
+                    self.serial_port = ports[0].device
+                    print("Warning: No SparkFun port found. Check connection. Using first port:", self.serial_port)
+            elif platform == "win32":  # Windows
+                ports = list(serial.tools.list_ports.comports())
+                if ports:
+                    for port in ports:
+                        if "USB Serial Device" in port.description or "SparkFun" in port.description:
+                            self.serial_port = port.device
+                            print("Using auto-selected serial port:", self.serial_port)
+                            return
+                    self.serial_port = ports[0].device
+                    print("Warning: No SparkFun port found. Check connection. Using first port:", self.serial_port)
+            else: # linux
+                ports = list(serial.tools.list_ports.comports())
+                if ports:
+                    for port in ports:
+                        if "SparkFun" in port.description:
+                            self.serial_port = port.device
+                            print("Using auto-selected serial port:", self.serial_port)
+                            return
+                    self.serial_port = ports[0].device
+                    print("Warning: No SparkFun port found. Check connection. Using first port:", self.serial_port)
+        else:
+            print("Using provided serial port:", self.serial_port)
 
 
 
