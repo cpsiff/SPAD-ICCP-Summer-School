@@ -41,7 +41,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 if ports:
                     # Try to auto-select a port that typically starts with "COM"
                     for port in ports:
-                        if "COM" in port.device:
+                        if "USB Serial Device" in port.description:
                             self.serial_port = port.device
                             break
                 else:
