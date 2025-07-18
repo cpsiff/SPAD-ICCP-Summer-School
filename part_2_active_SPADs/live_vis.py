@@ -32,7 +32,6 @@ class MainWindow(QtWidgets.QMainWindow):
                         if "SparkFun" in port.description:
                             self.serial_port = port.device
                             break
-                else:
                     self.serial_port = ports[0].device
                     print("Warning: No SparkFun port found. Check connection. Using first port:", self.serial_port)
             elif platform == "win32":  # Windows
@@ -42,7 +41,6 @@ class MainWindow(QtWidgets.QMainWindow):
                         if "USB Serial Device" in port.description or "SparkFun" in port.description:
                             self.serial_port = port.device
                             break
-                else:
                     self.serial_port = ports[0].device
                     print("Warning: No SparkFun port found. Check connection. Using first port:", self.serial_port)
             else: # linux
@@ -52,7 +50,6 @@ class MainWindow(QtWidgets.QMainWindow):
                         if "SparkFun" in port.description:
                             self.serial_port = port.device
                             break
-                else:
                     self.serial_port = ports[0].device
                     print("Warning: No SparkFun port found. Check connection. Using first port:", self.serial_port)
             print("Using auto-selected serial port:", self.serial_port)
