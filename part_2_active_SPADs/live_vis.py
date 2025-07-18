@@ -28,30 +28,35 @@ class MainWindow(QtWidgets.QMainWindow):
             if platform == "darwin":  # macOS
                 ports = list(serial.tools.list_ports.comports())
                 if ports:
-                    # Try to auto-select a port with likely USB/Serial in description
                     for port in ports:
-                        # print(port.device)
                         if "SparkFun" in port.description:
                             self.serial_port = port.device
                             break
                 else:
                     self.serial_port = ports[0].device
+                    print("Warning: No SparkFun port found. Check connection. Using first port:", self.serial_port)
             elif platform == "win32":  # Windows
                 ports = list(serial.tools.list_ports.comports())
                 if ports:
-                    # Try to auto-select a port that typically starts with "COM"
                     for port in ports:
-                        if "USB Serial Device" in port.description:
+                        if "USB Serial Device" in port.description or "SparkFun" in port.description:
                             self.serial_port = port.device
                             break
                 else:
                     self.serial_port = ports[0].device
-
-            else:
-                self.serial_port = "/dev/ttyACM0"
-            print("No serial port provided. Using auto-selected port:", self.serial_port)
+                    print("Warning: No SparkFun port found. Check connection. Using first port:", self.serial_port)
+            else: # linux
+                ports = list(serial.tools.list_ports.comports())
+                if ports:
+                    for port in ports:
+                        if "SparkFun" in port.description:
+                            self.serial_port = port.device
+                            break
+                else:
+                    self.serial_port = ports[0].device
+                    print("Warning: No SparkFun port found. Check connection. Using first port:", self.serial_port)
+            print("Using auto-selected serial port:", self.serial_port)
         else:
-            self.serial_port = serial_port
             print("Using provided serial port:", self.serial_port)
 
 
