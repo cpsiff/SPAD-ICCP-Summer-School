@@ -15,3 +15,7 @@ and navigate to the first activity, `activity_hdr.ipynb`, to start!
 
 
 ## 1.b: Motion Projections
+
+Launch jupyter lab as before.
+
+Navigate to the first activity, `activity_motion_projection.ipynb`, to start!
