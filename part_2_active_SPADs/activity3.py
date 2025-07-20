@@ -37,7 +37,7 @@ def eval_dist_on_dataset():
         data = json.load(f)
 
     true_dists = [datapoint["dist_to_plane"] for datapoint in data]
-    onboard_dists = [datapoint["distances"][0]["depths_1"][4] for datapoint in data]
+    onboard_dists = [datapoint["distances"][0]["depths_1"][4]/1000 for datapoint in data]
     est_dists = [estimate_distance(datapoint["hists"][4]) for datapoint in data]
 
     plt.scatter(true_dists, onboard_dists, label="Onboard Distance")
